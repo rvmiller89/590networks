@@ -1,0 +1,15 @@
+Our idea involves an analysis of live data that is accessible from Google Sets, essentially data from search queries.  We would like to implement a system that, provided a source word and destination word, determines the path of related search queries that somehow connect the two, demonstrating the small world phenomenon.
+
+For instance, given "wine" and "France", it may return a list resembling 
+
+wine
+grapes
+cold climate
+northern hemisphere
+Europe
+France
+
+The resulting graph will also be analyzed using the methods provided by igraph.
+
+We will start with a single word, and we can collect related words by the above method, creating a small network in which every related word connects to the root word with an edge. We then iterate through the next word to appear on the list, treating it as a root word and so on, creating new edges.  We plan to stop the iteration (and network creation) after finding a chosen destination word, or after a set "depth" and reporting that there was no path connecting the two chosen words.
+
