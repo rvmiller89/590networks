@@ -13,7 +13,7 @@ import java.util.*;
 
 public class SpreadsheetAccess {
 	public static void main(String[] args)
-	      throws AuthenticationException, MalformedURLException, IOException, ServiceException {
+	      throws AuthenticationException, MalformedURLException, IOException, ServiceException, URISyntaxException {
 
 		String USERNAME = "networksdummy@gmail.com";
 		String PASSWORD = "590networks";
@@ -33,8 +33,6 @@ public class SpreadsheetAccess {
 	    System.out.println("PRINTING ALL SPREADSHEETS FOR ACCOUNT: " + USERNAME);
 	    SpreadsheetFeed feed = service.getFeed(SPREADSHEET_FEED_URL, SpreadsheetFeed.class);
 	    List<SpreadsheetEntry> spreadsheets = feed.getEntries();
-	    // Iterate through all of the spreadsheets returned
-	    
 	    SpreadsheetEntry ss = null;
 	    
 	    for (SpreadsheetEntry spreadsheet : spreadsheets) {
@@ -54,6 +52,8 @@ public class SpreadsheetAccess {
 	    // Make a request to the API to fetch information about all
 	    // worksheets in the spreadsheet.
 	    List<WorksheetEntry> worksheets = ss.getWorksheets();
+	    WorksheetEntry ws = null;
+	    
 
 	    // Iterate through each worksheet in the spreadsheet.
 	    for (WorksheetEntry worksheet : worksheets) {
@@ -64,7 +64,40 @@ public class SpreadsheetAccess {
 
 	    	// Print the fetched information to the screen for this worksheet.
 	    	System.out.println("\t" + title + "- rows:" + rowCount + " cols: " + colCount);
+	    	if (ws == null)
+	    		ws = worksheet;
 	    }
+	    
+	    if (ws == null)	{
+	    	System.err.println("ERROR: WORKSHEET NOT FOUND FOR SPREADSHEET: " + SPREADSHEET);
+    		System.exit(1);
+    	}	
+	
+	    System.out.println("CHOOSING THE FIRST WORKSHEET: " + ws.getTitle().getPlainText());
+	    
+	    
+	    System.out.println("FETCHING EVERY ROW IN FIRST COLUMN:");
+	    
+	    List<String> values = fetchFirstColumn(ws, service);
 
+
+	}
+
+	public static List<String> fetchFirstColumn(WorksheetEntry ws, SpreadsheetService service) 
+			throws URISyntaxException, IOException, ServiceException	{
+		List<String> values = new ArrayList<String>();
+	    URL firstRowCellFeedUrl = new URI(ws.getCellFeedUrl().toString() + "?min-row=1&min-col=1&max-col=1").toURL();
+	    CellFeed firstRowCellFeed = service.getFeed(firstRowCellFeedUrl, CellFeed.class);
+
+	    // Iterate through each cell, printing its value.
+	    for (CellEntry cell : firstRowCellFeed.getEntries()) {
+	    	// Print the cell's address in R1C1 notation
+	    	//System.out.print(cell.getId().substring(cell.getId().lastIndexOf('/') + 1) + "\t");
+
+	    	// Print the cell's displayed value (useful if the cell has a formula)
+	    	System.out.println("\t" + cell.getCell().getValue());
+	    	values.add(cell.getCell().getValue());
+	    }
+		return values;
 	}
 }
