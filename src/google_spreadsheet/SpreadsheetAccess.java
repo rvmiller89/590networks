@@ -109,6 +109,7 @@ public class SpreadsheetAccess {
 		    	System.exit(1);
 		    }
 		    
+		    // TODO talk to Azfar about timeout
 		    System.out.print("Waiting " + TIMEOUT + "ms FOR ROBOT TO GENERATE NEW WORDS...");
 		    try {
 				Thread.sleep(TIMEOUT);
@@ -118,8 +119,11 @@ public class SpreadsheetAccess {
 		    System.out.println("done");
 		    
 		    System.out.println("FETCHING EVERY ROW IN FIRST COLUMN:");
+		    
 		    // TODO give to Azfar
 		    List<String> values = fetchFirstColumn(ws, service);
+		    
+		    // TODO get new seed word from Azfar
 
 	    }
 	}
