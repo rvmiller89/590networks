@@ -1,9 +1,6 @@
 package google_spreadsheet;
 
-import com.google.gdata.client.authn.oauth.*;
 import com.google.gdata.client.spreadsheet.*;
-import com.google.gdata.data.*;
-import com.google.gdata.data.batch.*;
 import com.google.gdata.data.spreadsheet.*;
 import com.google.gdata.util.*;
 
@@ -12,13 +9,20 @@ import java.net.*;
 import java.util.*;
 
 public class SpreadsheetAccess {
+	
+	private static long iteration = 0;
+	
+	private static final String USERNAME = "networksdummy@gmail.com";
+	private static final String PASSWORD = "590networks";
+	private static final String SPREADSHEET = "ss1";
+	private static String SEED_WORD = "";
+	private static final int TIMEOUT = 1500;	// in ms
+	
 	public static void main(String[] args)
 	      throws AuthenticationException, MalformedURLException, IOException, ServiceException, URISyntaxException {
 
-		String USERNAME = "networksdummy@gmail.com";
-		String PASSWORD = "590networks";
-		String SPREADSHEET = "ss1";
-		
+		Scanner keyboardScanner = new Scanner(System.in);
+
 		System.out.println("CONFIG: USERNAME=" + USERNAME + ",SPREADSHEET=" + SPREADSHEET);
 		System.out.println("------------------------------------------------------");
 
@@ -76,13 +80,76 @@ public class SpreadsheetAccess {
 	    System.out.println("CHOOSING THE FIRST WORKSHEET: " + ws.getTitle().getPlainText());
 	    
 	    
-	    System.out.println("FETCHING EVERY ROW IN FIRST COLUMN:");
+	    if (SEED_WORD.equals(""))	{
+	    	System.out.print("ENTER SEED WORD: ");
+	    	SEED_WORD = keyboardScanner.nextLine();
+	    }
 	    
-	    List<String> values = fetchFirstColumn(ws, service);
+	    while (true)	{
+	    	
+	    	// Main Loop: 	(0) Clear worksheet
+	    	//				(1) Insert SEED_WORD
+	    	// 				(2) Wait TIMEOUT for robot to generate new words
+	    	//				(3) Read column of words and give to Azfar's thing
+	    	//				(4) Wait for Azfar to provide new SEED_WORD
+	    	//				(4) Repeat
+	    	
+	    	System.out.println("======= ITERATION " + iteration + " ========");
+	    	iteration++;
+	    	
+	    	System.out.print("CLEARING WORKSHEET...");
+		    clearWorksheet(ws, service);
+		    System.out.println("done");
+	    
+		    System.out.print("INSERTING SEED WORD '" + SEED_WORD + "' IN A1...");
+		    if (insertWordInA1(SEED_WORD, ws, service))
+		    	System.out.println("done");
+		    else	{
+		    	System.err.println("ERROR: UNABLE TO INSERT SEED WORD");
+		    	System.exit(1);
+		    }
+		    
+		    System.out.print("Waiting " + TIMEOUT + "ms FOR ROBOT TO GENERATE NEW WORDS...");
+		    try {
+				Thread.sleep(TIMEOUT);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		    System.out.println("done");
+		    
+		    System.out.println("FETCHING EVERY ROW IN FIRST COLUMN:");
+		    // TODO give to Azfar
+		    List<String> values = fetchFirstColumn(ws, service);
 
-
+	    }
 	}
 
+	private static boolean clearWorksheet(WorksheetEntry ws, SpreadsheetService service) 
+			throws IOException, ServiceException	{
+		// Fetch the cell feed of the worksheet.
+	    URL cellFeedUrl = ws.getCellFeedUrl();
+	    CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
+
+	    // Iterate through each cell
+	    for (CellEntry cell : cellFeed.getEntries()) {
+	        cell.changeInputValueLocal("");
+	        cell.update();
+	    }
+	    return true;
+	}
+	
+	public static boolean insertWordInA1(String word, WorksheetEntry ws, SpreadsheetService service) 
+			throws IOException, ServiceException	{
+	    
+	    // Fetch the cell feed of the worksheet.
+	    URL cellFeedUrl = ws.getCellFeedUrl();
+	    CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
+	    CellEntry cell = new CellEntry(1, 1, word);
+	    cellFeed.insert(cell);	    
+
+		return true;
+	}
+	
 	public static List<String> fetchFirstColumn(WorksheetEntry ws, SpreadsheetService service) 
 			throws URISyntaxException, IOException, ServiceException	{
 		List<String> values = new ArrayList<String>();
