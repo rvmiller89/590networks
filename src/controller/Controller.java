@@ -11,18 +11,18 @@ import robot.SpreadsheetRobot;
 
 public class Controller {
 
-	private static String SEED_WORD = "";
+	
 	
 	private static long iteration = 0;
 
 	public static void main(String[] args) {
 		Scanner keyboardScanner = new Scanner(System.in);
 		System.out.print("ENTER SEED WORD: ");
-        SEED_WORD = keyboardScanner.nextLine();
+        String seedWord = keyboardScanner.nextLine();
 		
         SpreadsheetAccess spreadsheetAccess = null;
 		try {
-			spreadsheetAccess = new SpreadsheetAccess(SEED_WORD);
+			spreadsheetAccess = new SpreadsheetAccess();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -33,19 +33,20 @@ public class Controller {
         while (true)	{
         	System.out.println("======= ITERATION " + iteration + " ========");
             iteration++;
-            
+
             try {
 				spreadsheetAccess.clearWorksheet();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
             try	{
-            	spreadsheetAccess.insertWordInA1();
+            	spreadsheetAccess.insertWordInA1(seedWord);
 	        } catch (Exception e) {
 				e.printStackTrace();
 			}
             
             r.populateWords();
+            // robot.populateWords()
             
             List<String> firstCol = null;
             try	{
@@ -56,9 +57,10 @@ public class Controller {
             }
             
             // TODO use firstCol to call addWords
+            // graph.addWords(firstCol)
             
-            // TODO pick new SEED_WORD before repeating with pickNewSeed()
-    		
+            // TODO pick new seedWord before repeating with pickNewSeed()
+    		// seedWord = graph.pickNewSeed()
         }
         
 	}

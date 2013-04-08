@@ -13,13 +13,12 @@ public class SpreadsheetAccess {
 	private static final String USERNAME = "networksdummy@gmail.com";
 	private static final String PASSWORD = "590networks";
 	private static final String SPREADSHEET = "ss1";
-	private String SEED_WORD = "";
-	
+
 	private SpreadsheetEntry ss;
 	private WorksheetEntry ws;
 	private SpreadsheetService service;
 	
-	public SpreadsheetAccess(String seedWord) throws IOException, ServiceException	{
+	public SpreadsheetAccess() throws IOException, ServiceException	{
 		System.out.println("CONFIG: USERNAME=" + USERNAME + ",SPREADSHEET=" + SPREADSHEET);
 		System.out.println("------------------------------------------------------");
 		this.service = new SpreadsheetService("SpreadsheetAccess");
@@ -74,10 +73,7 @@ public class SpreadsheetAccess {
     	}	
 	
 	    System.out.println("CHOOSING THE FIRST WORKSHEET: " + ws.getTitle().getPlainText());
-	    
-	    System.out.println("SETTING SEED WORD: " + seedWord);
-	    
-	    this.SEED_WORD = seedWord;
+
 	}
 
 	public void clearWorksheet() throws IOException, ServiceException	{
@@ -95,12 +91,12 @@ public class SpreadsheetAccess {
 	    System.out.println("done");
 	}
 	
-	public void insertWordInA1() throws IOException, ServiceException	{
-		System.out.print("INSERTING SEED WORD '" + SEED_WORD + "' IN A1...");
+	public void insertWordInA1(String seedWord) throws IOException, ServiceException	{
+		System.out.print("INSERTING SEED WORD '" + seedWord + "' IN A1...");
 	    // Fetch the cell feed of the worksheet.
 	    URL cellFeedUrl = ws.getCellFeedUrl();
 	    CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
-	    CellEntry cell = new CellEntry(1, 1, this.SEED_WORD);
+	    CellEntry cell = new CellEntry(1, 1, seedWord);
 	    cellFeed.insert(cell);	    
 	    System.out.println("done");
 	}
