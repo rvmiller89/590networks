@@ -26,6 +26,8 @@ public class Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		SpreadsheetRobot r = new SpreadsheetRobot();
         
         // TODO make this able to stop...
         while (true)	{
@@ -43,7 +45,7 @@ public class Controller {
 				e.printStackTrace();
 			}
             
-            // TODO populateWords()
+            r.populateWords();
             
             List<String> firstCol = null;
             try	{
