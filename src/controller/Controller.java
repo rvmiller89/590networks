@@ -28,6 +28,9 @@ public class Controller {
 		}
 		
 		SpreadsheetRobot r = new SpreadsheetRobot();
+		
+		// TODO
+		// graph.setSeedWord(seedWord);
         
         // TODO make this able to stop...
         while (true)	{
