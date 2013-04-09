@@ -49,7 +49,6 @@ public class Controller {
 			}
             
             r.populateWords();
-            // robot.populateWords()
             
             List<String> firstCol = null;
             try	{
