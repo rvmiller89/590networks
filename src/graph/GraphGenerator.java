@@ -2,6 +2,7 @@ package graph;
 
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
+import org.jgrapht.ext.*;
 import java.util.*;
 import java.io.*;
 
@@ -10,7 +11,7 @@ public class GraphGenerator
     private int k;
     private UndirectedGraph<String, DefaultEdge> graph;
     private LinkedList<String> seedQueue;
-    private String sourceWord, targetWord;
+    private String targetWord;
     private boolean foundTargetWord;
     
     /*
@@ -27,12 +28,11 @@ public class GraphGenerator
      */
     private static final String OUTPUT_FILENAME = "output.gml";
     
-    public GraphGenerator(String sourceWord, String targetWord, int k)
+    public GraphGenerator(String targetWord, int k)
     {
         graph = new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
         seedQueue = new LinkedList<String>();
         this.k = k;
-        this.sourceWord = sourceWord;
         this.targetWord = targetWord;
         foundTargetWord = false;
         
@@ -54,6 +54,14 @@ public class GraphGenerator
         
         for (String word : words)
         {
+            //if the word contains anything besides English letters, ignore it
+            if (word.matches(".*[^a-zA-Z].*"))
+            {
+                System.out.println("Ignoring bad result word: " + word);
+                
+                continue;
+            }
+            
             //if the word does not already exist in the graph
             if (graph.addVertex(word))
             {
@@ -85,7 +93,7 @@ public class GraphGenerator
             //we are done
             if (!foundTargetWord && word.equalsIgnoreCase(targetWord))
             {
-                System.out.println("Found target word");
+                System.out.println(" === Found target word === ");
                 
                 foundTargetWord = true;
             }
@@ -105,7 +113,7 @@ public class GraphGenerator
         //this allows for the program to terminate if the UI ever messes
         //up) until we reach a valid word...or we throw an exception
         //if we unexpectedly run out of words...which shouldn't happen either
-        while (newSeed == DEPTH_TOKEN)
+        while (newSeed == DEPTH_TOKEN && k > 0)
         {
             System.out.println("Found DEPTH_TOKEN, moving to next depth");
             
@@ -128,54 +136,17 @@ public class GraphGenerator
         System.out.print("Generating graph...");
         
         BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILENAME));
-        int id = 0;
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        StringBuilder sb = new StringBuilder();
-        String color;
+        GmlExporter<String, DefaultEdge> exporter = new GmlExporter<String, DefaultEdge>();
         
         /*
          * outputs the graph we generated in GML format
          * 
-         * intended to analyzed and visualized using igraph and Cairo
+         * intended to analyzed and visualized using igraph and/or Cairo
          */
+                
+        exporter.setPrintLabels(GmlExporter.PRINT_VERTEX_LABELS);
+        exporter.export(writer, graph);
         
-        sb.append("graph\n");
-        sb.append("[\n");
-        sb.append("  directed 0\n");
-        
-        for (String v : graph.vertexSet())
-        {
-            map.put(v, id);
-            
-            color = v.equals(sourceWord) || v.equals(targetWord) ? "red" : "blue";
-            
-            sb.append("  node\n");
-            sb.append("  [\n");
-            sb.append("    id " + id + "\n");
-            sb.append("    label \"" + v + "\"\n");
-            sb.append("    color \"" + color + "\"\n");
-            sb.append("    label_dist 2\n");
-            sb.append("  ]\n");
-            
-            id++;
-        }
-        
-        for (DefaultEdge e : graph.edgeSet())
-        {
-            sb.append("  edge\n");
-            sb.append("  [\n");
-            sb.append("    source " + map.get(graph.getEdgeSource(e)) + "\n");
-            sb.append("    target " + map.get(graph.getEdgeTarget(e)) + "\n");
-            sb.append("  ]\n");
-        }
-        
-        sb.append("]\n");
-        
-        System.out.println("done");
-        
-        System.out.print("Printing graph...");
-        
-        writer.write(sb.toString());
         writer.close();
         
         System.out.println("done (" + OUTPUT_FILENAME + ")");
@@ -190,7 +161,7 @@ public class GraphGenerator
 
     public static void main(String[] args) throws IOException 
     {
-        GraphGenerator g = new GraphGenerator("car", "oil", 3);
+        GraphGenerator g = new GraphGenerator("oil", 3);
         List<String> words = new ArrayList<String>();
         String seed = "car";
         

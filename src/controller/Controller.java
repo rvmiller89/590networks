@@ -39,7 +39,7 @@ public class Controller {
             e1.printStackTrace();
         }
         
-        GraphGenerator graph = new GraphGenerator(seedWord, targetWord, k);
+        GraphGenerator graph = new GraphGenerator(targetWord, k);
         
         while (!graph.isDone())	{
         	System.out.println("======= ITERATION " + iteration + " ========");

@@ -13,4 +13,8 @@ from igraph import *
 
 g = Graph.Read_GML("../output.gml")
 
-plot(g, "output.png", margin = 50)
+summary(g)
+
+print("\naverage path length = " + str(g.average_path_length()))
+
+#plot(g, "output.png", margin = 50)

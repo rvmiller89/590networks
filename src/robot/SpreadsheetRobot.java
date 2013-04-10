@@ -21,7 +21,7 @@ public class SpreadsheetRobot
      * a large number of cells so the robot will scroll past the bottom
      * of the screen on the spreadsheet, allowing for more columns to be filled
      */
-    private static final int NUM_CELLS = 100;
+    private static final int NUM_CELLS = 40;
 
     /*
      * the height of a Google Spreadsheet cell as it appears on
@@ -58,28 +58,20 @@ public class SpreadsheetRobot
         //press left mouse button
         r.mousePress(InputEvent.BUTTON1_MASK);
 
-        //move to the last cell in the spreadsheet we can see
+        //move to the last cell 
         r.mouseMove(START_X, START_Y + getDeltaY());
-        
-        //delay to allow scrolling
-        r.delay(500);
 
         //release the left mouse button
         r.mouseRelease(InputEvent.BUTTON1_MASK);
-        
-        //move to bottom right corner of first spreadsheet cell
-        r.mouseMove(START_X, START_Y);
-        
-        //click
-        r.mousePress(InputEvent.BUTTON1_MASK);
-        r.mouseRelease(InputEvent.BUTTON1_MASK);
-                
-        //type Home key
-        r.keyPress(KeyEvent.VK_HOME);
-        r.keyRelease(KeyEvent.VK_HOME);
 
         //release the CTRL key
         r.keyRelease(KeyEvent.VK_CONTROL);
+        
+        //deselect the first column by
+        //clicking somewhere not in the first column
+        r.mouseMove(START_X * 2, START_Y);
+        r.mousePress(InputEvent.BUTTON1_MASK);
+        r.mouseRelease(InputEvent.BUTTON1_MASK);
         
         //wait 1 more seconds to let Google Sets populate
         r.delay(1 * 1000);
