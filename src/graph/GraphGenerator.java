@@ -12,6 +12,7 @@ public class GraphGenerator
     private UndirectedGraph<String, DefaultEdge> graph;
     private LinkedList<String> seedQueue;
     private String targetWord;
+    private String seedWord;
     private boolean foundTargetWord;
     
     /*
@@ -26,9 +27,9 @@ public class GraphGenerator
     /*
      * output to python directory
      */
-    private static final String OUTPUT_FILENAME = "output.gml";
+    private static String OUTPUT_FILENAME = "output.gml";
     
-    public GraphGenerator(String targetWord, int k)
+    public GraphGenerator(String seedWord, String targetWord, int k)
     {
         graph = new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
         seedQueue = new LinkedList<String>();
@@ -38,6 +39,9 @@ public class GraphGenerator
         
         //start queue off with the DEPTH_TOKEN
         seedQueue.addLast(DEPTH_TOKEN);
+        
+        // name the output file something meaningful, like the start word
+        OUTPUT_FILENAME = seedWord.toLowerCase() + ".gml";
     }
     
     public void addWords(String seed, List<String> words)
@@ -161,7 +165,7 @@ public class GraphGenerator
 
     public static void main(String[] args) throws IOException 
     {
-        GraphGenerator g = new GraphGenerator("oil", 3);
+        GraphGenerator g = new GraphGenerator("car", "oil", 3);
         List<String> words = new ArrayList<String>();
         String seed = "car";
         

@@ -24,6 +24,13 @@ public class Controller {
         int k = keyboardScanner.nextInt();
         
         keyboardScanner.close();
+        
+        try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		
         SpreadsheetAccess spreadsheetAccess = null;
 		try {
@@ -32,6 +39,8 @@ public class Controller {
 			e.printStackTrace();
 		}
 		
+		
+		
 		SpreadsheetRobot r = null;
         try {
             r = new SpreadsheetRobot();
@@ -39,7 +48,7 @@ public class Controller {
             e1.printStackTrace();
         }
         
-        GraphGenerator graph = new GraphGenerator(targetWord, k);
+        GraphGenerator graph = new GraphGenerator(seedWord, targetWord, k);
         
         while (!graph.isDone())	{
         	System.out.println("======= ITERATION " + iteration + " ========");
