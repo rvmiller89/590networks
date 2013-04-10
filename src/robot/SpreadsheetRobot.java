@@ -14,17 +14,14 @@ public class SpreadsheetRobot
      * generally, it should work if your browser is in full screen
      * mode *AND* Google Spreadsheet is in full screen mode (View -> Full screen)
      */
-    private static final int START_X = 165;
+    private static final int START_X = 166;
     private static final int START_Y = 41;
 
     /*
-     * the number of cells in the spreadsheet we want to populate
-     * as visible on Azfar's computer
-     * 
-     * the mouse may move offscreen, but Google Spreadsheet will just keep
-     * scrolling down until he mouse button is released
+     * a large number of cells so the robot will scroll past the bottom
+     * of the screen on the spreadsheet, allowing for more columns to be filled
      */
-    private static final int NUM_CELLS = 58;
+    private static final int NUM_CELLS = 100;
 
     /*
      * the height of a Google Spreadsheet cell as it appears on
@@ -35,44 +32,59 @@ public class SpreadsheetRobot
     //the Robot
     private Robot r;
 
-    public SpreadsheetRobot()
+    public SpreadsheetRobot() throws AWTException
     {
-        try
-        {
-            r = new Robot();
-        }
-        catch(AWTException e)
-        {
-            e.printStackTrace();
-        }
+        r = new Robot();
 
-        //put in an automatic delay of 500ms so the UI can
+        //put in an automatic delay so the UI can
         //keep up with the Robot's movements
-        r.setAutoDelay(500);
+        r.setAutoDelay(100);
     }
 
     public void populateWords()
     {
+        System.out.print("Robot working...");
+        
         //move to bottom right corner of first spreadsheet cell
         r.mouseMove(START_X, START_Y);
+        
+        //click
+        r.mousePress(InputEvent.BUTTON1_MASK);
+        r.mouseRelease(InputEvent.BUTTON1_MASK);
 
         //press the CTRL key
         r.keyPress(KeyEvent.VK_CONTROL);
 
         //press left mouse button
-        r.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        r.mousePress(InputEvent.BUTTON1_MASK);
 
         //move to the last cell in the spreadsheet we can see
         r.mouseMove(START_X, START_Y + getDeltaY());
+        
+        //delay to allow scrolling
+        r.delay(500);
 
         //release the left mouse button
-        r.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        r.mouseRelease(InputEvent.BUTTON1_MASK);
+        
+        //move to bottom right corner of first spreadsheet cell
+        r.mouseMove(START_X, START_Y);
+        
+        //click
+        r.mousePress(InputEvent.BUTTON1_MASK);
+        r.mouseRelease(InputEvent.BUTTON1_MASK);
+                
+        //type Home key
+        r.keyPress(KeyEvent.VK_HOME);
+        r.keyRelease(KeyEvent.VK_HOME);
 
         //release the CTRL key
         r.keyRelease(KeyEvent.VK_CONTROL);
-
-        //wait 2 more seconds to let Google Sets populate
-        r.delay(2 * 1000);
+        
+        //wait 1 more seconds to let Google Sets populate
+        r.delay(1 * 1000);
+        
+        System.out.println("done");
     }
 
     private static final int getDeltaY()
@@ -89,5 +101,10 @@ public class SpreadsheetRobot
          * n - 1 such cell borders
          */
         return (CELL_HEIGHT * NUM_CELLS) - (NUM_CELLS - 1);
+    }
+    
+    public static void main(String[] args) throws AWTException
+    {
+        new SpreadsheetRobot().populateWords();
     }
 }

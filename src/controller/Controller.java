@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.AWTException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
@@ -7,18 +8,22 @@ import java.util.Scanner;
 import com.google.gdata.util.ServiceException;
 
 import google_spreadsheet.SpreadsheetAccess;
+import graph.GraphGenerator;
 import robot.SpreadsheetRobot;
 
 public class Controller {
-
-	
-	
 	private static long iteration = 0;
 
 	public static void main(String[] args) {
 		Scanner keyboardScanner = new Scanner(System.in);
 		System.out.print("ENTER SEED WORD: ");
         String seedWord = keyboardScanner.nextLine();
+        System.out.print("ENTER TARGET WORD: ");
+        String targetWord = keyboardScanner.nextLine();
+        System.out.print("ENTER DEPTH: ");
+        int k = keyboardScanner.nextInt();
+        
+        keyboardScanner.close();
 		
         SpreadsheetAccess spreadsheetAccess = null;
 		try {
@@ -27,13 +32,16 @@ public class Controller {
 			e.printStackTrace();
 		}
 		
-		SpreadsheetRobot r = new SpreadsheetRobot();
-		
-		// TODO
-		// graph.setSeedWord(seedWord);
+		SpreadsheetRobot r = null;
+        try {
+            r = new SpreadsheetRobot();
+        } catch (AWTException e1) {
+            e1.printStackTrace();
+        }
         
-        // TODO make this able to stop...
-        while (true)	{
+        GraphGenerator graph = new GraphGenerator(seedWord, targetWord, k);
+        
+        while (!graph.isDone())	{
         	System.out.println("======= ITERATION " + iteration + " ========");
             iteration++;
 
@@ -58,13 +66,16 @@ public class Controller {
             	e.printStackTrace();
             }
             
-            // TODO use firstCol to call addWords
-            // graph.addWords(firstCol)
+            graph.addWords(seedWord, firstCol);
             
-            // TODO pick new seedWord before repeating with pickNewSeed()
-    		// seedWord = graph.pickNewSeed()
+            seedWord = graph.pickNewSeed();
         }
         
+        try {
+            graph.outputGraph();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }        
 	}
 
 }
