@@ -16,7 +16,7 @@ public class SpreadsheetAccess {
 	
 	private static final String USERNAME = "networksdummy@gmail.com";
 	private static final String PASSWORD = "590networks";
-	private static final String SPREADSHEET = "ss1";
+	private static final String SPREADSHEET = "ss3";
 	private static final int 	MAX_ROWS = 80;		// Needed for batch clear worksheet
 
 	private SpreadsheetEntry ss;
