@@ -11,14 +11,16 @@
 
 from igraph import *
 
-g = Graph.Read_GML("../output.gml")
+filename = raw_input("filename: ")
+
+g = Graph.Read_GML(filename)
 
 summary(g)
 
 print("\naverage path length = " + str(g.average_path_length()))
 
-seedWord = "apple"
-targetWord = "orange"
+seedWord = raw_input("seed word: ")
+targetWord = raw_input("target word: ")
 
 a = g.vs.select(label_eq=seedWord)[0]
 b = g.vs.select(label_eq=targetWord)[0]
