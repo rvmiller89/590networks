@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Name:        graph_plot
+# Name:        analyze_graph
 # Purpose:
 #
 # Author:      Azfar Khandoker
@@ -11,16 +11,34 @@
 
 from igraph import *
 
+#this should be *JUST* the filename, not the path to it
+#for example, input would be: "apple.orange.gml"
 filename = raw_input("filename: ")
 
-g = Graph.Read_GML(filename)
+#the graphs should be located in the graphs/
+#directory, which is one level above this
+#working directory
+file_to_read = "../graphs/" + filename
+
+print ("reading " + file_to_read)
+
+g = Graph.Read_GML(file_to_read)
 
 summary(g)
 
 print("\naverage path length = " + str(g.average_path_length()))
 
-seedWord = raw_input("seed word: ")
-targetWord = raw_input("target word: ")
+#this should gives us an array of
+#3 elements with the 0th element being
+#the seed word, the 1th element being the
+#target word and the 2th element being "gml"
+result = filename.split('.')
+
+seedWord = result[0]
+targetWord = result[1]
+
+print ("seed word = \"" + seedWord + "\"")
+print ("target word = \"" + targetWord + "\"")
 
 a = g.vs.select(label_eq=seedWord)[0]
 b = g.vs.select(label_eq=targetWord)[0]

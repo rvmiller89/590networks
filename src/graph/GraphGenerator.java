@@ -12,7 +12,6 @@ public class GraphGenerator
     private UndirectedGraph<String, DefaultEdge> graph;
     private LinkedList<String> seedQueue;
     private String targetWord;
-    private String seedWord;
     private boolean foundTargetWord;
     
     /*
@@ -27,7 +26,7 @@ public class GraphGenerator
     /*
      * output to python directory
      */
-    private static String OUTPUT_FILENAME = "output.gml";
+    private String outputFile;
     
     public GraphGenerator(String seedWord, String targetWord, int k)
     {
@@ -40,8 +39,9 @@ public class GraphGenerator
         //start queue off with the DEPTH_TOKEN
         seedQueue.addLast(DEPTH_TOKEN);
         
-        // name the output file something meaningful, like the start word
-        OUTPUT_FILENAME = seedWord.toLowerCase() + ".gml";
+        //name the output file something meaningful
+        //and put it in the graphs directory 
+        outputFile = "graphs/" + seedWord.toLowerCase() + "." + targetWord.toLowerCase() + ".gml";
     }
     
     public void addWords(String seed, List<String> words)
@@ -139,7 +139,7 @@ public class GraphGenerator
     {
         System.out.print("Generating graph...");
         
-        BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILENAME));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
         GmlExporter<String, DefaultEdge> exporter = new GmlExporter<String, DefaultEdge>();
         
         /*
@@ -153,7 +153,7 @@ public class GraphGenerator
         
         writer.close();
         
-        System.out.println("done (" + OUTPUT_FILENAME + ")");
+        System.out.println("done (" + outputFile + ")");
     }
     
     public boolean isDone()
