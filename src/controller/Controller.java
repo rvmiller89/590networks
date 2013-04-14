@@ -77,6 +77,18 @@ public class Controller {
             
             graph.addWords(seedWord, firstCol);
             
+            //we flush the graph to disk every now
+            //and then so to account for the system
+            //crashing...or Google messing up
+            if (iteration % 1000 == 0)
+            {
+                try {
+                    graph.outputGraph();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
             seedWord = graph.pickNewSeed();
         }
         
