@@ -80,7 +80,7 @@ public class Controller {
             //we flush the graph to disk every now
             //and then so to account for the system
             //crashing...or Google messing up
-            if (iteration % 1000 == 0)
+            if (iteration % 500 == 0)
             {
                 try {
                     graph.outputGraph();
