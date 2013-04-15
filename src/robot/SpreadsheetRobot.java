@@ -8,14 +8,13 @@ public class SpreadsheetRobot
     /*
      * These starting coordinates are known to work on Azfar's
      * computer with screen resolution 1920x1080 with Google
-     * Spreadsheet open in Firefox with both Google Spreadsheet
-     * *AND* Firefox in full screen mode
+     * Spreadsheet open in Firefox with Firefox in full screen mode
      * 
      * generally, it should work if your browser is in full screen
-     * mode *AND* Google Spreadsheet is in full screen mode (View -> Full screen)
+     * mode
      */
-    private static final int START_X = 166;
-    private static final int START_Y = 41;
+    private static final int START_X = 406;
+    private static final int START_Y = 185;
 
     /*
      * a large number of cells so the robot will scroll past the bottom
@@ -39,6 +38,29 @@ public class SpreadsheetRobot
         //put in an automatic delay so the UI can
         //keep up with the Robot's movements
         r.setAutoDelay(100);
+    }
+    
+    public void reloadPage()
+    {
+        System.out.print("Refreshing page...");
+        
+        /*
+         * we reload the Google Spreadsheet
+         * to avoid any hiccups from Google (or us)
+         * 
+         */
+        
+        r.keyPress(KeyEvent.VK_F5);
+        r.keyRelease(KeyEvent.VK_F5);
+        
+        //should gets rid of the "Are you sure?" box
+        r.keyPress(KeyEvent.VK_ENTER);
+        r.keyRelease(KeyEvent.VK_ENTER);
+        
+        //wait for page to reload
+        r.delay(3000);
+        
+        System.out.println("done");
     }
 
     public void populateWords()
@@ -97,6 +119,16 @@ public class SpreadsheetRobot
     
     public static void main(String[] args) throws AWTException
     {
-        new SpreadsheetRobot().populateWords();
+        SpreadsheetRobot spreadsheetRobot = new SpreadsheetRobot();
+        
+        for (int i = 0 ; i < 10 ; i++)
+        {
+            spreadsheetRobot.populateWords();
+            
+            if (i % 3 == 0)
+            {
+                spreadsheetRobot.reloadPage();
+            }
+        }
     }
 }

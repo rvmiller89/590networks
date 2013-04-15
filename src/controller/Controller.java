@@ -39,8 +39,6 @@ public class Controller {
 			e.printStackTrace();
 		}
 		
-		
-		
 		SpreadsheetRobot r = null;
         try {
             r = new SpreadsheetRobot();
@@ -80,6 +78,9 @@ public class Controller {
             //we flush the graph to disk every now
             //and then so to account for the system
             //crashing...or Google messing up
+            //we also refresh the spreadsheet...just
+            //to get reset things and go back to a known
+            //operational state
             if (iteration % 500 == 0)
             {
                 try {
@@ -87,6 +88,8 @@ public class Controller {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                
+                r.reloadPage();
             }
             
             seedWord = graph.pickNewSeed();

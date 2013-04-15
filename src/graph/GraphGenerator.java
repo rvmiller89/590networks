@@ -5,6 +5,7 @@ import org.jgrapht.graph.*;
 import org.jgrapht.ext.*;
 import java.util.*;
 import java.io.*;
+import java.util.regex.*;
 
 public class GraphGenerator 
 {
@@ -24,7 +25,16 @@ public class GraphGenerator
     private static final String DEPTH_TOKEN = "DEPTH_TOKEN";
     
     /*
-     * output to python directory
+     * the regular expression representing a valid word that can be used
+     * by our system
+     * 
+     * anything that does not match this regex is ignored (e.g. non-english characters)
+     */
+    private static final String VALID_WORD_REGEX = "[a-zA-Z][\\sa-zA-Z]*";    
+    private static final Pattern PATTERN = Pattern.compile(VALID_WORD_REGEX);
+    
+    /*
+     * output to graphs/ directory
      */
     private String outputFile;
     
@@ -58,8 +68,8 @@ public class GraphGenerator
         
         for (String word : words)
         {
-            //if the word contains anything besides English letters, ignore it
-            if (word.matches(".*[^a-zA-Z].*"))
+            //if the word is invalid, ignore it
+            if (!PATTERN.matcher(word).matches())
             {
                 System.out.println("Ignoring bad result word: " + word);
                 
