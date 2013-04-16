@@ -51,13 +51,18 @@ public class Controller {
         while (!graph.isDone())	{
         	System.out.println("======= ITERATION " + iteration + " ========");
             iteration++;
-
+            
+            /*
             try {
 				spreadsheetAccess.clearWorksheet();
 			} catch (Exception e) {
 				e.printStackTrace();
 				continue;
 			}
+			*/
+            // Let's try this manually
+			r.clearWorksheet();
+			
             try	{
             	spreadsheetAccess.insertWordInA1(seedWord);
 	        } catch (Exception e) {
@@ -93,6 +98,17 @@ public class Controller {
                 }
                 
                 r.reloadPage();
+                // Go ahead and reconnect spreadsheet
+                spreadsheetAccess = null;
+                while (spreadsheetAccess == null)	{
+	                try {
+	                	// 
+	        			spreadsheetAccess = new SpreadsheetAccess();
+	        		} catch (Exception e) {
+	        			e.printStackTrace();
+	        			spreadsheetAccess = null;
+	        		}
+                }
             }
             
             seedWord = graph.pickNewSeed();

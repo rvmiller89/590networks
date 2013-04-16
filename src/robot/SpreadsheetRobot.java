@@ -62,6 +62,23 @@ public class SpreadsheetRobot
         
         System.out.println("done");
     }
+    
+    public void clearWorksheet()	{
+    	//press the CTRL key
+    	r.delay(200);
+        r.keyPress(KeyEvent.VK_CONTROL);
+        r.keyPress(KeyEvent.VK_A);
+        r.keyRelease(KeyEvent.VK_CONTROL);
+        r.keyRelease(KeyEvent.VK_A);
+        
+        r.delay(200);
+        
+        r.keyPress(KeyEvent.VK_DELETE);
+        r.keyRelease(KeyEvent.VK_DELETE);
+        
+        r.delay(200);
+   
+    }
 
     public void populateWords()
     {
