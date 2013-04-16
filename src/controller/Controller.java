@@ -56,11 +56,13 @@ public class Controller {
 				spreadsheetAccess.clearWorksheet();
 			} catch (Exception e) {
 				e.printStackTrace();
+				continue;
 			}
             try	{
             	spreadsheetAccess.insertWordInA1(seedWord);
 	        } catch (Exception e) {
 				e.printStackTrace();
+				continue;
 			}
             
             r.populateWords();
@@ -71,6 +73,7 @@ public class Controller {
             }
             catch (Exception e)	{
             	e.printStackTrace();
+            	continue;
             }
             
             graph.addWords(seedWord, firstCol);
