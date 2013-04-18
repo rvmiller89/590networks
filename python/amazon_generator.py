@@ -63,7 +63,9 @@ for seed in seeds:
             #since multiple of these such graphs are possible,
             #we use a counter to allow for unique filenames when outputting
             if subgraph.diameter() >= k:
-                subgraph.write_gml('output/' + seed + '_' + str(count) + '.gml')
+                f = open('output/' + seed + '_' + str(count) + '.gml', 'w')
+                subgraph.write_gml(f)
+                f.close()
                 count += 1
 
     if count == 0:
