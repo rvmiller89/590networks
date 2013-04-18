@@ -20,7 +20,7 @@ seeds = [
     'Sony'
 ]
 
-k = 4
+k = 2
 
 print "Reading edge list"
 
@@ -43,10 +43,11 @@ for seed in seeds:
 	print "Making subgraph for seed: " + seed
 	count = 0
 	vertex = g.vs.select(title=seed)[0]	
-	neighborhood = g.neighborhood(vertex, k)
+	neighborhood = g.neighborhood(vertex, k, "out")
 
 	subgraph = g.subgraph(neighborhood)
 
-	new_file = open("/homes/millerrv/scratch/" + seed + "_" + str(count) + ".gml", 'w')
-	subgraph.write_gml(new_file)
+	new_file = open("/homes/millerrv/scratch/" + seed + "_" + str(count) + ".graphml", 
+'w')
+	subgraph.write_graphml(new_file)
 	new_file.close()
