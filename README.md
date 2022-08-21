@@ -5,6 +5,6 @@ Uses Google Sets data available from Google Spreadsheets to create star graph re
 
 Presentation: http://rvmiller.com/2013/04/presentation-analyzing-the-semantic-modeling-capabilities-of-google-sets/
 
-![Google Sets example](https://github.com/rvmiller89/590networks/raw/master/sets1.png)
+![Google Sets example](sets1.png)
 
-![Star graph example](https://github.com/rvmiller89/590networks/raw/master/sets2.png)
+![Star graph example](sets2.png)
